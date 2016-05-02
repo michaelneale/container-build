@@ -1,5 +1,5 @@
 node {
 
-   sh "echo hey"
+   sh "badecho hey"
 
 }
