@@ -1,20 +1,32 @@
-node {
-    
-    stage "Build"
-       sh "echo here"
+stage "Build"
+    node {
+       sh "echo here" 
+    }
        
-    stage "Test"
-        parallel (
-            "Firefox" : {
-                sh "echo ffox"
-            },
-            "Chrome" : {
-                sh "echo chrome"
-            }
-        )
+
+stage "Test"
+parallel (
+    "Firefox" : {
+        node {
+            sh "echo ffox"    
+        }
         
-    stage "Deploy"
-        sh "echo deploying"
-    
+    },
+    "Chrome" : {
+        node {
+            sh "echo chrome"    
+        }
+        
+    }
+)
+        
+        
+        
+        
+stage "Deploy"
+node {
+    sh "echo deploying"
 }
+        
+    
 
