@@ -1,4 +1,5 @@
 stage "Build"
+    if (env.BRANCH_NAME != "master") return
     node {
        sh "echo here" 
     }
