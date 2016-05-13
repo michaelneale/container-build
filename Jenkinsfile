@@ -1,35 +1,8 @@
 
-/**
-
-env.FOO = 42
-
-node {
-    container {
-            image = "cloudbees/java-build-tools"
-            script = 'echo hey > $PWD/data'
-            archive = '$PWD/data'
-            testScript = 'echo $FOO'
-    }    
-    stash name: "binary", includes: "data"
-}
-
-node {
-    unstash 'binary'
-    container {
-        image = "cloudbees/java-build-tools"
-        script = "ls -lah"
-    }
-    
-}
-
-*/
 
 inContainer
 {
-        image = "cloudbees/java-build-tools"
-        /* - or use label??
-         * - if no image, but is a Dockerfile, try and build it
-         */
+        image = "cloudbees/java-build-tools" //optional, or will loolk for Dockerfile
         script = 'echo hey > $PWD/data'
         archive = '$PWD/data'
         testScript = "echo pass"
@@ -74,7 +47,7 @@ def inContainer_impl(body, useStages) {
     if (config.image) {
       def image = docker.image(config.image)
     } else {
-      def image = docker.build()
+      def image = docker.build("build")
     }
     def image = docker.image(config.image)
     
@@ -137,5 +110,31 @@ def notifyFailure(e, config) {
 def notifyUnstable(config) {
   echo "unstable ZOMG"
 }
+
+
+/**
+
+env.FOO = 42
+
+node {
+    container {
+            image = "cloudbees/java-build-tools"
+            script = 'echo hey > $PWD/data'
+            archive = '$PWD/data'
+            testScript = 'echo $FOO'
+    }    
+    stash name: "binary", includes: "data"
+}
+
+node {
+    unstash 'binary'
+    container {
+        image = "cloudbees/java-build-tools"
+        script = "ls -lah"
+    }
+    
+}
+
+*/
         
     
