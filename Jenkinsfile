@@ -2,7 +2,7 @@
 
 inContainer
 {
-        image = "cloudbees/java-build-tools" //optional, or will loolk for Dockerfile
+        //image = "cloudbees/java-build-tools" //optional, or will loolk for Dockerfile
         script = 'echo hey > $PWD/data'
         archive = '$PWD/data'
         testScript = "echo pass"
@@ -44,12 +44,13 @@ def inContainer_impl(body, useStages) {
     if (currentBuild.result == 'UNSTABLE') return
     
     if (useStages) stage "Preparing container"        
+    def image = null
     if (config.image) {
-      def image = docker.image(config.image)
+      image = docker.image(config.image)
     } else {
-      def image = docker.build("build")
+      echo "building image"
+      image = docker.build("build")
     }
-    def image = docker.image(config.image)
     
     image.inside {
         if (useStages) {
