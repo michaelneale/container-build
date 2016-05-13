@@ -9,10 +9,11 @@ inContainer
         // X label - do outside in node
         // X testResults         
         // X git THINK: need to do checkout scm, but sometimes supress it... hrm can just do git checkout outside if needed... or check for .git.. 
-        // retry
-        // timeout
-        // dockerfile check for file existence? 
-        // branch
+        // X dockerfile check for file existence? 
+        // X branch
+        // retry - just around main script
+        // timeout - just around main script
+        
         // hipchat
         // slack
         // email
@@ -43,13 +44,15 @@ def inContainer_impl(body, useStages) {
     if (config.branch && config.branch != env.BRANCH_NAME) return
     if (currentBuild.result == 'UNSTABLE') return
     
-    if (useStages) stage "Preparing container"        
+    
     def image = null
     if (config.image) {
+      if (useStages) stage "Preparing container"        
       image = docker.image(config.image)
     } else {
-      echo "building image"
-      image = docker.build("build")
+      if (useStages) stage "Building image"   
+      //TODO should use hash of dockerfile for this
+      image = docker.build("buildcontainer")
     }
     
     image.inside {
